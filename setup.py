@@ -26,7 +26,7 @@ setup(
     keywords='flint mccabe',
     author='Florent Xicluna',
     author_email='florent.xicluna@gmail.com',
-    url='https://github.com/florentx/flint_mccabe',
+    url='https://github.com/florentx/flint-mccabe',
     license='Expat license',
     py_modules=['flint_mccabe'],
     zip_safe=False,
