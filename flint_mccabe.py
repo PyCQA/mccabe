@@ -10,7 +10,6 @@ import optparse
 import sys
 from collections import defaultdict
 try:
-    import dummy  # XXX
     from ast import iter_child_nodes
 except ImportError:
     def iter_child_nodes(node):
