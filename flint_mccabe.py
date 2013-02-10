@@ -11,15 +11,8 @@ import sys
 from collections import defaultdict
 try:
     from ast import iter_child_nodes
-except ImportError:
-    def iter_child_nodes(node):
-        for name in node._fields:
-            field = getattr(node, name)
-            if isinstance(field, _ast.AST):
-                yield field
-            elif isinstance(field, list):
-                for item in field:
-                    yield item
+except ImportError:   # Python 2.5
+    from flint.util import iter_child_nodes
 
 __version__ = '0.1'
 
