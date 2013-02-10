@@ -1,5 +1,5 @@
-flint-mccabe - McCabe complexity checker
-========================================
+McCabe complexity checker
+=========================
 
 Ned's script to check McCabe complexity.
 
@@ -45,7 +45,7 @@ higher that the value::
 
     $ flint --max-complexity 10 coolproject
     ...
-    coolprogect/mod.py:1204:1: C901 'CoolFactory.prepare' is too complex (14)
+    coolproject/mod.py:1204:1: C901 'CoolFactory.prepare' is too complex (14)
 
 This feature is quite useful to detect over-complex code. According to McCabe,
 anything that goes beyond 10 is too complex.
@@ -54,7 +54,7 @@ anything that goes beyond 10 is too complex.
 Links
 -----
 
-* cyclomatic complexity: http://en.wikipedia.org/wiki/Cyclomatic_complexity.
+* Cyclomatic complexity: http://en.wikipedia.org/wiki/Cyclomatic_complexity.
 
 * Ned Batchelder's script:
   http://nedbatchelder.com/blog/200803/python_code_complexity_microtool.html
