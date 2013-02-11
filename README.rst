@@ -63,6 +63,12 @@ Links
 Changes
 -------
 
+0.2 - unreleased
+````````````````
+
+* Read ``max-complexity`` from the configuration file.
+
+
 0.1 - 2013-02-11
 ````````````````
 * First release

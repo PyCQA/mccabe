@@ -14,7 +14,7 @@ try:
 except ImportError:   # Python 2.5
     from flint.util import iter_child_nodes
 
-__version__ = '0.1'
+__version__ = '0.2a0'
 
 
 class ASTVisitor(object):
@@ -237,6 +237,7 @@ class McCabeChecker(object):
     def add_options(cls, parser):
         parser.add_option('--max-complexity', default=-1, action='store',
                           type='int', help="McCabe complexity threshold")
+        parser.config_options.append('max-complexity')
 
     @classmethod
     def parse_options(cls, options):
