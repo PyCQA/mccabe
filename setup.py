@@ -26,7 +26,7 @@ setup(
     keywords='flint mccabe',
     author='Florent Xicluna',
     author_email='florent.xicluna@gmail.com',
-    url='https://github.com/florentx/flint-mccabe',
+    url='https://github.com/flintwork/flint-mccabe',
     license='Expat license',
     py_modules=['flint_mccabe'],
     zip_safe=False,
@@ -48,6 +48,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Utilities',
+        'Topic :: Software Development :: Quality Assurance',
     ],
 )
