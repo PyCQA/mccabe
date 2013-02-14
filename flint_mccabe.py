@@ -249,13 +249,12 @@ class McCabeChecker(object):
         visitor = PathGraphingAstVisitor()
         visitor.preorder(self.tree, visitor)
         for graph in visitor.graphs.values():
-            graph_complexity = graph.complexity()
-            if graph_complexity >= self.max_complexity:
-                text = self._error_tmpl % (graph.entity, graph_complexity)
+            if graph.complexity() >= self.max_complexity:
+                text = self._error_tmpl % (graph.entity, graph.complexity())
                 yield graph.lineno, 0, text, type(self)
 
 
-def get_code_complexity(code, min_complexity=7, filename='stdin'):
+def get_code_complexity(code, threshold=7, filename='stdin'):
     try:
         tree = compile(code, filename, "exec", ast.PyCF_ONLY_AST)
     except SyntaxError:
@@ -264,7 +263,7 @@ def get_code_complexity(code, min_complexity=7, filename='stdin'):
         return 0
 
     complx = []
-    McCabeChecker.max_complexity = min_complexity
+    McCabeChecker.max_complexity = threshold
     for lineno, offset, text, check in McCabeChecker(tree, filename):
         complx.append('%s:%d:1: %s' % (filename, lineno, text))
 
@@ -274,18 +273,18 @@ def get_code_complexity(code, min_complexity=7, filename='stdin'):
     return len(complx)
 
 
-def get_module_complexity(module_path, min_complexity=7):
+def get_module_complexity(module_path, threshold=7):
     """Returns the complexity of a module"""
     with open(module_path, "rU") as mod:
         code = mod.read()
-    return get_code_complexity(code, min_complexity, filename=module_path)
+    return get_code_complexity(code, threshold, filename=module_path)
 
 
 def main(argv):
     opar = optparse.OptionParser()
     opar.add_option("-d", "--dot", dest="dot",
                     help="output a graphviz dot file", action="store_true")
-    opar.add_option("-m", "--min", dest="min",
+    opar.add_option("-m", "--min", dest="threshold",
                     help="minimum complexity for output", type="int",
                     default=2)
 
@@ -300,13 +299,14 @@ def main(argv):
     if options.dot:
         print('graph {')
         for graph in visitor.graphs.values():
-            if graph.complexity() >= options.min:
+            if graph.complexity() >= options.threshold:
                 graph.to_dot()
         print('}')
     else:
         for graph in visitor.graphs.values():
-            if graph.complexity() >= options.min:
+            if graph.complexity() >= options.threshold:
                 print(graph.name, graph.complexity())
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
