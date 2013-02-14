@@ -5,14 +5,14 @@
 """
 from __future__ import with_statement
 
-import _ast
 import optparse
 import sys
 from collections import defaultdict
 try:
+    import ast
     from ast import iter_child_nodes
 except ImportError:   # Python 2.5
-    from flint.util import iter_child_nodes
+    from flint.util import ast, iter_child_nodes
 
 __version__ = '0.2a0'
 
@@ -257,7 +257,7 @@ class McCabeChecker(object):
 
 def get_code_complexity(code, min_complexity=7, filename='stdin'):
     try:
-        ast = compile(code, filename, "exec", _ast.PyCF_ONLY_AST)
+        tree = compile(code, filename, "exec", ast.PyCF_ONLY_AST)
     except SyntaxError:
         e = sys.exc_info()[1]
         sys.stderr.write("Unable to parse %s: %s\n" % (filename, e))
@@ -265,7 +265,7 @@ def get_code_complexity(code, min_complexity=7, filename='stdin'):
 
     complx = []
     McCabeChecker.max_complexity = min_complexity
-    for lineno, offset, text, check in McCabeChecker(ast, filename):
+    for lineno, offset, text, check in McCabeChecker(tree, filename):
         complx.append('%s:%d:1: %s' % (filename, lineno, text))
 
     if len(complx) == 0:
@@ -293,9 +293,9 @@ def main(argv):
 
     with open(args[0], "rU") as mod:
         code = mod.read()
-    ast = compile(code, args[0], "exec", _ast.PyCF_ONLY_AST)
+    tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
     visitor = PathGraphingAstVisitor()
-    visitor.preorder(ast, visitor)
+    visitor.preorder(tree, visitor)
 
     if options.dot:
         print('graph {')
