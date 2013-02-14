@@ -264,7 +264,7 @@ def get_code_complexity(code, threshold=7, filename='stdin'):
 
     complx = []
     McCabeChecker.max_complexity = threshold
-    for lineno, offset, text, check in McCabeChecker(tree, filename):
+    for lineno, offset, text, check in McCabeChecker(tree, filename).run():
         complx.append('%s:%d:1: %s' % (filename, lineno, text))
 
     if len(complx) == 0:
