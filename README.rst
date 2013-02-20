@@ -3,17 +3,17 @@ McCabe complexity checker
 
 Ned's script to check McCabe complexity.
 
-This module provides a plugin for ``flint``, the Python code checker.
+This module provides a plugin for ``flake8``, the Python code checker.
 
 
 Installation
 ------------
 
-You can install, upgrade, uninstall ``flint-mccabe`` with these commands::
+You can install, upgrade, uninstall ``mccabe`` with these commands::
 
-  $ pip install flint-mccabe
-  $ pip install --upgrade flint-mccabe
-  $ pip uninstall flint-mccabe
+  $ pip install mccabe
+  $ pip install --upgrade mccabe
+  $ pip uninstall mccabe
 
 
 Standalone script
@@ -21,7 +21,7 @@ Standalone script
 
 The complexity checker can be used directly::
 
-  $ python -m flint_mccabe --min 5 flint_mccabe.py
+  $ python -m mccabe --min 5 mccabe.py
   ("185:1: 'PathGraphingAstVisitor.visitIf'", 5)
   ("71:1: 'PathGraph.to_dot'", 5)
   ("245:1: 'McCabeChecker.run'", 5)
@@ -30,20 +30,20 @@ The complexity checker can be used directly::
   ("257:1: 'get_code_complexity'", 5)
 
 
-Plugin for Flint
-----------------
+Plugin for Flake8
+-----------------
 
-When both ``flint`` and ``flint-mccabe`` are installed, the plugin is
-available in ``flint``::
+When both ``flake8`` and ``mccabe`` are installed, the plugin is
+available in ``flake8``::
 
-  $ flint --version
-  0.1 (pep8: 1.4.2, pyflakes: 0.6.1, mccabe: 0.1)
+  $ flake8 --version
+  2.0 (pep8: 1.4.2, pyflakes: 0.6.1, mccabe: 0.2)
 
 By default the plugin is disabled.  Use the ``--max-complexity`` switch to
 enable it.  It will emit a warning if the McCabe complexity of a function is
 higher that the value::
 
-    $ flint --max-complexity 10 coolproject
+    $ flake8 --max-complexity 10 coolproject
     ...
     coolproject/mod.py:1204:1: C901 'CoolFactory.prepare' is too complex (14)
 
@@ -65,6 +65,10 @@ Changes
 
 0.2 - unreleased
 ````````````````
+
+* Rename project ``flint-mccabe`` to ``mccabe``.
+
+* Provide ``flake8.extension`` setuptools entry point.
 
 * Read ``max-complexity`` from the configuration file.
 

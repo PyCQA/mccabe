@@ -12,7 +12,7 @@ try:
     import ast
     from ast import iter_child_nodes
 except ImportError:   # Python 2.5
-    from flint.util import ast, iter_child_nodes
+    from flake8.util import ast, iter_child_nodes
 
 __version__ = '0.2a0'
 

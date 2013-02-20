@@ -3,7 +3,7 @@ from __future__ import with_statement
 from setuptools import setup
 
 
-def get_version(fname='flint_mccabe.py'):
+def get_version(fname='mccabe.py'):
     with open(fname) as f:
         for line in f:
             if line.startswith('__version__'):
@@ -19,23 +19,23 @@ def get_long_description():
 
 
 setup(
-    name='flint-mccabe',
+    name='mccabe',
     version=get_version(),
-    description="McCabe checker, plugin for flint",
+    description="McCabe checker, plugin for flake8",
     long_description=get_long_description(),
-    keywords='flint mccabe',
+    keywords='flake8 mccabe',
     author='Florent Xicluna',
     author_email='florent.xicluna@gmail.com',
-    url='https://github.com/flintwork/flint-mccabe',
+    url='https://github.com/florentx/mccabe',
     license='Expat license',
-    py_modules=['flint_mccabe'],
+    py_modules=['mccabe'],
     zip_safe=False,
     install_requires=[
         'setuptools',
     ],
     entry_points={
-        'flint.extension': [
-            'C90 = flint_mccabe:McCabeChecker',
+        'flake8.extension': [
+            'C90 = mccabe:McCabeChecker',
         ],
     },
     classifiers=[
