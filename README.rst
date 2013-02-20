@@ -68,6 +68,8 @@ Changes
 
 * Read ``max-complexity`` from the configuration file.
 
+* Rename argument ``min_complexity`` to ``threshold``.
+
 
 0.1 - 2013-02-11
 ````````````````
