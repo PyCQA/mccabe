@@ -33,7 +33,10 @@ The complexity checker can be used directly::
 Plugin for Flake8
 -----------------
 
-When both ``flake8`` and ``mccabe`` are installed, the plugin is
+.. warning::
+   This feature requires ``flake8`` version 2.0 which is not released at this time.
+
+When both ``flake8 2.0`` and ``mccabe`` are installed, the plugin is
 available in ``flake8``::
 
   $ flake8 --version
