@@ -63,7 +63,7 @@ Links
 Changes
 -------
 
-0.2 - unreleased
+0.2 - 2013-02-22
 ````````````````
 
 * Rename project ``flint-mccabe`` to ``mccabe``.
