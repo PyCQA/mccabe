@@ -32,9 +32,6 @@ setup(
     license='Expat license',
     py_modules=['mccabe'],
     zip_safe=False,
-    install_requires=[
-        'setuptools',
-    ],
     entry_points={
         'flake8.extension': [
             'C90 = mccabe:McCabeChecker',
