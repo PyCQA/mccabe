@@ -54,6 +54,8 @@ anything that goes beyond 10 is too complex.
 Links
 -----
 
+* Feedback and ideas: http://mail.python.org/mailman/listinfo/code-quality
+
 * Cyclomatic complexity: http://en.wikipedia.org/wiki/Cyclomatic_complexity.
 
 * Ned Batchelder's script:
