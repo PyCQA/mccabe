@@ -14,7 +14,7 @@ try:
 except ImportError:   # Python 2.5
     from flake8.util import ast, iter_child_nodes
 
-__version__ = '0.2'
+__version__ = '0.2.1'
 
 
 class ASTVisitor(object):
