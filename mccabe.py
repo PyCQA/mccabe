@@ -14,7 +14,7 @@ try:
 except ImportError:   # Python 2.5
     from flake8.util import ast, iter_child_nodes
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 
 class ASTVisitor(object):
@@ -81,7 +81,7 @@ class PathGraph(object):
         """ Return the McCabe complexity for the graph.
             V-E+2
         """
-        num_edges = sum([len(n) for n in self.nodes.values()])
+        num_edges = sum([len(n) for n in self.nodes.values()]) - 1
         num_nodes = len(self.nodes)
         return num_edges - num_nodes + 2
 
@@ -249,7 +249,7 @@ class McCabeChecker(object):
         visitor = PathGraphingAstVisitor()
         visitor.preorder(self.tree, visitor)
         for graph in visitor.graphs.values():
-            if graph.complexity() >= self.max_complexity:
+            if graph.complexity() > self.max_complexity:
                 text = self._error_tmpl % (graph.entity, graph.complexity())
                 yield graph.lineno, 0, text, type(self)
 

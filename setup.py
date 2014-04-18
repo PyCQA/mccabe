@@ -28,6 +28,7 @@ setup(
     author_email='tarek@ziade.org',
     maintainer='Florent Xicluna',
     maintainer_email='florent.xicluna@gmail.com',
+    package_data={'': ['LICENSE']},
     url='https://github.com/flintwork/mccabe',
     license='Expat license',
     py_modules=['mccabe'],
