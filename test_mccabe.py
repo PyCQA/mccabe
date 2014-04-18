@@ -33,9 +33,8 @@ class McCabeTest(unittest.TestCase):
         sys.sdtout = self.old
 
     def test_sample(self):
-        self.assertEqual(get_code_complexity(_GLOBAL, 1), 2)
+        self.assertEqual(get_code_complexity(_GLOBAL, 1), 1)
         self.out.seek(0)
         res = self.out.read().strip().split('\n')
-        wanted = ["stdin:5:1: C901 'a' is too complex (4)",
-                  "stdin:2:1: C901 'Loop 2' is too complex (2)"]
+        wanted = ["stdin:5:1: C901 'a' is too complex (3)"]
         self.assertEqual(res, wanted)
