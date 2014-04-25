@@ -47,7 +47,7 @@ higher that the value::
     ...
     coolproject/mod.py:1204:1: C901 'CoolFactory.prepare' is too complex (14)
 
-This feature is quite useful to detect over-complex code. According to McCabe,
+This feature is quite useful to detect over-complex code.  According to McCabe,
 anything that goes beyond 10 is too complex.
 
 
@@ -65,6 +65,17 @@ Links
 Changes
 -------
 
+0.2.x - unreleased
+``````````````````
+
+* Computation was wrong: the mccabe complexity starts at 1, not 2.
+
+* The ``max-complexity`` value is now inclusive.  E.g.: if the
+  value is 10 and the reported complexity is 10, then it passes.
+
+* Add tests.
+
+
 0.2.1 - 2013-04-03
 ``````````````````
 
@@ -75,7 +86,7 @@ Changes
 0.2 - 2013-02-22
 ````````````````
 
-* Rename project ``flint-mccabe`` to ``mccabe``.
+* Rename project to ``mccabe``.
 
 * Provide ``flake8.extension`` setuptools entry point.
 
