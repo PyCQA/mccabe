@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
+
 from setuptools import setup
 
 
@@ -33,6 +34,7 @@ setup(
     license='Expat license',
     py_modules=['mccabe'],
     zip_safe=False,
+    test_suite='test_mccabe',
     entry_points={
         'flake8.extension': [
             'C90 = mccabe:McCabeChecker',
