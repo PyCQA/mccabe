@@ -15,14 +15,12 @@ def f(n):
     k = n + 4
     s = k + n
     return s
-
 """
 
 
 sequential_unencapsulated = """\
 k = 2 + 4
 s = k + 3
-
 """
 
 
@@ -34,15 +32,13 @@ def f(n):
         return "is never executed"
     else:
         return "smaller than or equal to four"
-
 """
 
 
 for_loop = """\
 def f():
     for i in range(10):
-        print i
-
+        print(i)
 """
 
 
@@ -62,12 +58,11 @@ def a():
             pass
         c()
     b()
-
 """
 
 
 def get_complexity_number(snippet, strio):
-    """Get the complexity number from the printed string caught by StringIO()."""
+    """Get the complexity number from the printed string."""
     # Report from the lowest complexity number.
     get_code_complexity(snippet, 0)
     strio_val = strio.getvalue()
