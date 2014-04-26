@@ -29,9 +29,9 @@ def f(n):
     if n > 4:
         return "bigger than four"
     elif n > 3:
-        return "is never executed"
+        return "equal to four"
     else:
-        return "smaller than or equal to four"
+        return "smaller than or equal to three"
 """
 
 
