@@ -28,10 +28,10 @@ if_elif_else_dead_path = """\
 def f(n):
     if n > 4:
         return "bigger than four"
-    elif n > 3:
-        return "equal to four"
+    elif n > 5:
+        return "is never executed"
     else:
-        return "smaller than or equal to three"
+        return "smaller than or equal to 4"
 """
 
 
