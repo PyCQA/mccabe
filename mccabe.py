@@ -280,7 +280,9 @@ def get_module_complexity(module_path, threshold=7):
     return get_code_complexity(code, threshold, filename=module_path)
 
 
-def main(argv):
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
     opar = optparse.OptionParser()
     opar.add_option("-d", "--dot", dest="dot",
                     help="output a graphviz dot file", action="store_true")
