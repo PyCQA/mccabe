@@ -26,10 +26,10 @@ s = k + 3
 
 if_elif_else_dead_path = """\
 def f(n):
-    if n > 4:
-        return "bigger than four"
-    elif n > 3:
-        return "equal to four"
+    if n > 3:
+        return "bigger than three"
+    elif n > 4:
+        return "is never executed"
     else:
         return "smaller than or equal to three"
 """
