@@ -21,7 +21,7 @@ Standalone script
 
 The complexity checker can be used directly::
 
-  $ python -m mccabe --min 5 mccabe.py
+  $ mccabe --min 5 mccabe.py
   ("185:1: 'PathGraphingAstVisitor.visitIf'", 5)
   ("71:1: 'PathGraph.to_dot'", 5)
   ("245:1: 'McCabeChecker.run'", 5)

@@ -35,6 +35,9 @@ setup(
     zip_safe=False,
     test_suite='test_mccabe',
     entry_points={
+        'console_scripts': [
+            'mccabe = mccabe:main',
+        ],
         'flake8.extension': [
             'C90 = mccabe:McCabeChecker',
         ],
