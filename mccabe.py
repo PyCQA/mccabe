@@ -67,6 +67,8 @@ class PathGraph(object):
 
     def connect(self, n1, n2):
         self.nodes[n1].append(n2)
+        # Ensure that the destination node is always counted.
+        self.nodes[n2]
 
     def to_dot(self):
         print('subgraph {')
@@ -81,7 +83,7 @@ class PathGraph(object):
         """ Return the McCabe complexity for the graph.
             V-E+2
         """
-        num_edges = sum([len(n) for n in self.nodes.values()]) - 1
+        num_edges = sum([len(n) for n in self.nodes.values()])
         num_nodes = len(self.nodes)
         return num_edges - num_nodes + 2
 
@@ -192,8 +194,6 @@ class PathGraphingAstVisitor(ASTVisitor):
             self.tail = pathnode
             self.dispatch_list(node.orelse)
             loose_ends.append(self.tail)
-        else:
-            loose_ends.append(pathnode)
         if pathnode:
             bottom = PathNode("", look='point')
             for le in loose_ends:
@@ -288,7 +288,7 @@ def main(argv=None):
                     help="output a graphviz dot file", action="store_true")
     opar.add_option("-m", "--min", dest="threshold",
                     help="minimum complexity for output", type="int",
-                    default=2)
+                    default=0)
 
     options, args = opar.parse_args(argv)
 
@@ -301,7 +301,7 @@ def main(argv=None):
     if options.dot:
         print('graph {')
         for graph in visitor.graphs.values():
-            if graph.complexity() >= options.threshold:
+            if not options.threshold or graph.complexity() >= options.threshold:
                 graph.to_dot()
         print('}')
     else:

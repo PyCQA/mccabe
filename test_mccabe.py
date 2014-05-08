@@ -10,6 +10,9 @@ from mccabe import get_code_complexity
 
 # Snippets are put outside of testcases because of spacing issue that would
 # otherwise occur with triple quoted strings.
+trivial = 'def f(): pass'
+
+
 sequential = """\
 def f(n):
     k = n + 4
@@ -61,10 +64,10 @@ def a():
 """
 
 
-def get_complexity_number(snippet, strio):
+def get_complexity_number(snippet, strio, max=0):
     """Get the complexity number from the printed string."""
     # Report from the lowest complexity number.
-    get_code_complexity(snippet, 0)
+    get_code_complexity(snippet, max)
     strio_val = strio.getvalue()
     if strio_val:
         return int(strio_val.split()[-1].strip("()"))
@@ -114,6 +117,14 @@ class McCabeTestCase(unittest.TestCase):
         complexity = get_complexity_number(nested_functions, self.strio)
         self.assertEqual(complexity, 3)
 
+    def test_trivial(self):
+        """The most-trivial program should pass a max-complexity=1 test"""
+        complexity = get_complexity_number(trivial, self.strio, max=1)
+        self.assertEqual(complexity, None)
+        printed_message = self.strio.getvalue()
+        self.assertEqual(printed_message, "")
 
-if __name__ == "__main__":
+
+
+if __name__ == '__main__':
     unittest.main()
