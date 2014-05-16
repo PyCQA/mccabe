@@ -1,11 +1,12 @@
 import unittest
 import sys
+import ast
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
 
-from mccabe import get_code_complexity
+from mccabe import get_code_complexity, PathGraphingAstVisitor
 
 
 # Snippets are put outside of testcases because of spacing issue that would
@@ -61,6 +62,17 @@ def a():
 """
 
 
+func_in_class_in_func = """\
+def some_func():
+    class SomeClass(object):
+        def __init__(self):
+            if True:
+                return True
+    if True:
+        return SomeClass
+"""
+
+
 def get_complexity_number(snippet, strio):
     """Get the complexity number from the printed string."""
     # Report from the lowest complexity number.
@@ -111,9 +123,27 @@ class McCabeTestCase(unittest.TestCase):
         self.assertEqual(complexity, 2)
 
     def test_nested_functions_snippet(self):
-        complexity = get_complexity_number(nested_functions, self.strio)
-        self.assertEqual(complexity, 3)
+        tree = compile(nested_functions, '', "exec", ast.PyCF_ONLY_AST)
+        visitor = PathGraphingAstVisitor()
+        visitor.preorder(tree, visitor)
+        self.assertEqual(len(visitor.graphs), 3)
+        self.assertEqual(visitor.graphs['a'].complexity(), 1)
+        self.assertEqual(visitor.graphs['a.b'].complexity(), 1)
+        self.assertEqual(visitor.graphs['a.b.c'].complexity(), 1)
 
+    def test_func_in_class_in_func(self):
+        tree = compile(func_in_class_in_func, '', "exec", ast.PyCF_ONLY_AST)
+        visitor = PathGraphingAstVisitor()
+        visitor.preorder(tree, visitor)
+        self.assertEqual(len(visitor.graphs), 2)
+        self.assertEqual(
+            visitor.graphs['some_func'].complexity(),
+            2
+        )
+        self.assertEqual(
+            visitor.graphs['some_func.SomeClass.__init__'].complexity(),
+            2
+        )
 
 if __name__ == "__main__":
     unittest.main()
