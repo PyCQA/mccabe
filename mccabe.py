@@ -114,22 +114,19 @@ class PathGraphingAstVisitor(ASTVisitor):
 
         name = '%d:1: %r' % (node.lineno, entity)
 
-        if self.graph is not None:
-            # closure
-            pathnode = self.appendPathNode(name)
-            self.tail = pathnode
-            self.dispatch_list(node.body)
-            bottom = PathNode("", look='point')
-            self.graph.connect(self.tail, bottom)
-            self.graph.connect(pathnode, bottom)
-            self.tail = bottom
-        else:
-            self.graph = PathGraph(name, entity, node.lineno)
-            pathnode = PathNode(name)
-            self.tail = pathnode
-            self.dispatch_list(node.body)
-            self.graphs["%s%s" % (self.classname, node.name)] = self.graph
-            self.reset()
+        old_graph = self.graph
+        old_tail = self.tail
+        self.graph = PathGraph(name, entity, node.lineno)
+        pathnode = PathNode(name)
+        self.tail = pathnode
+        old_classname = self.classname
+        self.classname += node.name + "."
+        self.dispatch_list(node.body)
+        self.classname = old_classname
+        self.graphs[entity] = self.graph
+        self.reset()
+        self.tail = old_tail
+        self.graph = old_graph
 
     def visitClassDef(self, node):
         old_classname = self.classname
