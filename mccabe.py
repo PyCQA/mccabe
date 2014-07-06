@@ -81,8 +81,9 @@ class PathGraph(object):
         """ Return the McCabe complexity for the graph.
             V-E+2
         """
-        num_edges = sum([len(n) for n in self.nodes.values()]) - 1
-        num_nodes = len(self.nodes)
+        num_edges = sum([len(n) for n in self.nodes.values()])
+        # do not miss the last destination node
+        num_nodes = len(self.nodes) + 1
         return num_edges - num_nodes + 2
 
 
