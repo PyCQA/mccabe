@@ -115,8 +115,8 @@ class McCabeTestCase(unittest.TestCase):
 
     def test_for_loop_snippet(self):
         complexity = get_complexity_number(for_loop, self.strio)
-        # The for loop doesn't add an execution path
-        self.assertEqual(complexity, 1)
+        # The for loop adds an execution path; sometimes it won't be run.
+        self.assertEqual(complexity, 2)
 
     def test_for_else_snippet(self):
         complexity = get_complexity_number(for_else, self.strio)
