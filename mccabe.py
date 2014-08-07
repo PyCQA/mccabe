@@ -68,7 +68,7 @@ class PathGraph(object):
     def connect(self, n1, n2):
         self.nodes[n1].append(n2)
         # Ensure that the destination node is always counted.
-        self.nodes[n2]
+        self.nodes[n2] = []
 
     def to_dot(self):
         print('subgraph {')
@@ -288,7 +288,7 @@ def main(argv=None):
                     help="output a graphviz dot file", action="store_true")
     opar.add_option("-m", "--min", dest="threshold",
                     help="minimum complexity for output", type="int",
-                    default=0)
+                    default=1)
 
     options, args = opar.parse_args(argv)
 
