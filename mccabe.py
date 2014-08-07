@@ -162,32 +162,29 @@ class PathGraphingAstVisitor(ASTVisitor):
 
     def visitLoop(self, node):
         name = "Loop %d" % node.lineno
-
-        if self.graph is None:
-            # global loop
-            self.graph = PathGraph(name, name, node.lineno)
-            pathnode = PathNode(name)
-            self.tail = pathnode
-            self.dispatch_list(node.body)
-            self.graphs["%s%s" % (self.classname, name)] = self.graph
-            self.reset()
-        else:
-            pathnode = self.appendPathNode(name)
-            self.tail = pathnode
-            self.dispatch_list(node.body)
-            bottom = PathNode("", look='point')
-            self.graph.connect(self.tail, bottom)
-            self.graph.connect(pathnode, bottom)
-            self.tail = bottom
-
-        # TODO: else clause in node.orelse
+        self._inner1(node, name)
 
     visitFor = visitWhile = visitLoop
 
     def visitIf(self, node):
         name = "If %d" % node.lineno
-        pathnode = self.appendPathNode(name)
+        self._inner1(node, name)
+
+    def _inner1(self, node, name):
+        if self.graph is None:
+            # global loop
+            self.graph = PathGraph(name, name, node.lineno)
+            pathnode = PathNode(name)
+            self._inner2(node, pathnode)
+            self.graphs["%s%s" % (self.classname, name)] = self.graph
+            self.reset()
+        else:
+            pathnode = self.appendPathNode(name)
+            self._inner2(node, pathnode)
+
+    def _inner2(self, node, pathnode):
         loose_ends = []
+        self.tail = pathnode
         self.dispatch_list(node.body)
         loose_ends.append(self.tail)
         if node.orelse:

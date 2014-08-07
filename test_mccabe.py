@@ -45,6 +45,15 @@ def f():
 """
 
 
+for_else = """\
+def f(mylist):
+    for i in mylist:
+        print(i)
+    else:
+        print(None)
+"""
+
+
 recursive = """\
 def f(n):
     if n > 4:
@@ -106,7 +115,12 @@ class McCabeTestCase(unittest.TestCase):
 
     def test_for_loop_snippet(self):
         complexity = get_complexity_number(for_loop, self.strio)
-        # The for loop doesn't add an execution path, yet is counted.
+        # The for loop doesn't add an execution path
+        self.assertEqual(complexity, 1)
+
+    def test_for_else_snippet(self):
+        complexity = get_complexity_number(for_else, self.strio)
+        # The for loop doesn't add an execution path, but its `else` does
         self.assertEqual(complexity, 2)
 
     def test_recursive_snippet(self):
