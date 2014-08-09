@@ -162,38 +162,39 @@ class PathGraphingAstVisitor(ASTVisitor):
 
     def visitLoop(self, node):
         name = "Loop %d" % node.lineno
-
-        if self.graph is None:
-            # global loop
-            self.graph = PathGraph(name, name, node.lineno)
-            pathnode = PathNode(name)
-            self.tail = pathnode
-            self.dispatch_list(node.body)
-            self.graphs["%s%s" % (self.classname, name)] = self.graph
-            self.reset()
-        else:
-            pathnode = self.appendPathNode(name)
-            self.tail = pathnode
-            self.dispatch_list(node.body)
-            bottom = PathNode("", look='point')
-            self.graph.connect(self.tail, bottom)
-            self.graph.connect(pathnode, bottom)
-            self.tail = bottom
-
-        # TODO: else clause in node.orelse
+        self._subgraph(node, name)
 
     visitFor = visitWhile = visitLoop
 
     def visitIf(self, node):
         name = "If %d" % node.lineno
-        pathnode = self.appendPathNode(name)
+        self._subgraph(node, name)
+
+    def _subgraph(self, node, name):
+        """create the subgraphs representing any `if` and `for` statements"""
+        if self.graph is None:
+            # global loop
+            self.graph = PathGraph(name, name, node.lineno)
+            pathnode = PathNode(name)
+            self._subgraph_parse(node, pathnode)
+            self.graphs["%s%s" % (self.classname, name)] = self.graph
+            self.reset()
+        else:
+            pathnode = self.appendPathNode(name)
+            self._subgraph_parse(node, pathnode)
+
+    def _subgraph_parse(self, node, pathnode):
+        """parse the body and any `else` block of `if` and `for` statements"""
         loose_ends = []
+        self.tail = pathnode
         self.dispatch_list(node.body)
         loose_ends.append(self.tail)
         if node.orelse:
             self.tail = pathnode
             self.dispatch_list(node.orelse)
             loose_ends.append(self.tail)
+        else:
+            loose_ends.append(pathnode)
         if pathnode:
             bottom = PathNode("", look='point')
             for le in loose_ends:
