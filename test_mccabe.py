@@ -74,13 +74,13 @@ def a():
 
 try_else = """\
 try:
-    print 1
+    print(1)
 except TypeA:
-    print 2
+    print(2)
 except TypeB:
-    print 3
+    print(3)
 else:
-    print 4
+    print(4)
 """
 
 

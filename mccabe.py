@@ -209,6 +209,8 @@ class PathGraphingAstVisitor(ASTVisitor):
         name = "TryExcept %d" % node.lineno
         self._subgraph(node, name, extra_blocks=node.handlers)
 
+    visitTry = visitTryExcept
+
     def visitWith(self, node):
         name = "With %d" % node.lineno
         self.appendPathNode(name)
