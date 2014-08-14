@@ -72,6 +72,17 @@ def a():
     b()
 """
 
+try_else = """\
+try:
+    print(1)
+except TypeA:
+    print(2)
+except TypeB:
+    print(3)
+else:
+    print(4)
+"""
+
 
 def get_complexity_number(snippet, strio, max=0):
     """Get the complexity number from the printed string."""
@@ -83,15 +94,26 @@ def get_complexity_number(snippet, strio, max=0):
     else:
         return None
 
-
 class McCabeTestCase(unittest.TestCase):
     def setUp(self):
         # If not assigned to sys.stdout then getvalue() won't capture anything.
+        self._orig_stdout = sys.stdout
         sys.stdout = self.strio = StringIO()
 
     def tearDown(self):
         # https://mail.python.org/pipermail/tutor/2012-January/088031.html
         self.strio.close()
+        sys.stdout = self._orig_stdout
+
+    def assert_complexity(self, snippet, max):
+        complexity = get_complexity_number(snippet, self.strio)
+        self.assertEqual(complexity, max)
+
+        # should have the same complexity when inside a function as well.
+        infunc = 'def f():\n    ' + snippet.replace('\n', '\n    ')
+        complexity = get_complexity_number(infunc, self.strio)
+        self.assertEqual(complexity, max)
+
 
     def test_print_message(self):
         get_code_complexity(sequential, 0)
@@ -137,6 +159,9 @@ class McCabeTestCase(unittest.TestCase):
         self.assertEqual(complexity, None)
         printed_message = self.strio.getvalue()
         self.assertEqual(printed_message, "")
+
+    def test_try_else(self):
+        self.assert_complexity(try_else, 4)
 
 
 if __name__ == "__main__":

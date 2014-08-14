@@ -170,25 +170,29 @@ class PathGraphingAstVisitor(ASTVisitor):
         name = "If %d" % node.lineno
         self._subgraph(node, name)
 
-    def _subgraph(self, node, name):
+    def _subgraph(self, node, name, extra_blocks=()):
         """create the subgraphs representing any `if` and `for` statements"""
         if self.graph is None:
             # global loop
             self.graph = PathGraph(name, name, node.lineno)
             pathnode = PathNode(name)
-            self._subgraph_parse(node, pathnode)
+            self._subgraph_parse(node, pathnode, extra_blocks)
             self.graphs["%s%s" % (self.classname, name)] = self.graph
             self.reset()
         else:
             pathnode = self.appendPathNode(name)
-            self._subgraph_parse(node, pathnode)
+            self._subgraph_parse(node, pathnode, extra_blocks)
 
-    def _subgraph_parse(self, node, pathnode):
+    def _subgraph_parse(self, node, pathnode, extra_blocks):
         """parse the body and any `else` block of `if` and `for` statements"""
         loose_ends = []
         self.tail = pathnode
         self.dispatch_list(node.body)
         loose_ends.append(self.tail)
+        for extra in extra_blocks:
+            self.tail = pathnode
+            self.dispatch_list(extra.body)
+            loose_ends.append(self.tail)
         if node.orelse:
             self.tail = pathnode
             self.dispatch_list(node.orelse)
@@ -203,19 +207,9 @@ class PathGraphingAstVisitor(ASTVisitor):
 
     def visitTryExcept(self, node):
         name = "TryExcept %d" % node.lineno
-        pathnode = self.appendPathNode(name)
-        loose_ends = []
-        self.dispatch_list(node.body)
-        loose_ends.append(self.tail)
-        for handler in node.handlers:
-            self.tail = pathnode
-            self.dispatch_list(handler.body)
-            loose_ends.append(self.tail)
-        if pathnode:
-            bottom = PathNode("", look='point')
-            for le in loose_ends:
-                self.graph.connect(le, bottom)
-            self.tail = bottom
+        self._subgraph(node, name, extra_blocks=node.handlers)
+
+    visitTry = visitTryExcept
 
     def visitWith(self, node):
         name = "With %d" % node.lineno
