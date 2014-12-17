@@ -65,8 +65,8 @@ Links
 Changes
 -------
 
-0.2.x - unreleased
-``````````````````
+0.3 - 2014-12-17
+````````````````
 
 * Computation was wrong: the mccabe complexity starts at 1, not 2.
 
