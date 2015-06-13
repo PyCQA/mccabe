@@ -5,6 +5,7 @@ try:
 except ImportError:
     from io import StringIO
 
+import mccabe
 from mccabe import get_code_complexity
 
 
@@ -162,6 +163,26 @@ class McCabeTestCase(unittest.TestCase):
 
     def test_try_else(self):
         self.assert_complexity(try_else, 4)
+
+
+class RegressionTests(unittest.TestCase):
+    def setUp(self):
+        self.original_complexity = mccabe.McCabeChecker.max_complexity
+
+    def tearDown(self):
+        mccabe.McCabeChecker.max_complexity = self.original_complexity
+
+    def test_max_complexity_is_always_an_int(self):
+        """Ensure bug #32 does not regress."""
+        class _options(object):
+            max_complexity = None
+
+        options = _options()
+        options.max_complexity = '16'
+
+        self.assertEqual(0, mccabe.McCabeChecker.max_complexity)
+        mccabe.McCabeChecker.parse_options(options)
+        self.assertEqual(16, mccabe.McCabeChecker.max_complexity)
 
 
 if __name__ == "__main__":
