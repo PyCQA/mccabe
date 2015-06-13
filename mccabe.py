@@ -236,7 +236,7 @@ class McCabeChecker(object):
 
     @classmethod
     def parse_options(cls, options):
-        cls.max_complexity = options.max_complexity
+        cls.max_complexity = int(options.max_complexity)
 
     def run(self):
         if self.max_complexity < 0:
