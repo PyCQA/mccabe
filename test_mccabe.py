@@ -95,6 +95,7 @@ def get_complexity_number(snippet, strio, max=0):
     else:
         return None
 
+
 class McCabeTestCase(unittest.TestCase):
     def setUp(self):
         # If not assigned to sys.stdout then getvalue() won't capture anything.
@@ -114,7 +115,6 @@ class McCabeTestCase(unittest.TestCase):
         infunc = 'def f():\n    ' + snippet.replace('\n', '\n    ')
         complexity = get_complexity_number(infunc, self.strio)
         self.assertEqual(complexity, max)
-
 
     def test_print_message(self):
         get_code_complexity(sequential, 0)

@@ -296,7 +296,8 @@ def main(argv=None):
     if options.dot:
         print('graph {')
         for graph in visitor.graphs.values():
-            if not options.threshold or graph.complexity() >= options.threshold:
+            if (not options.threshold or
+                    graph.complexity() >= options.threshold):
                 graph.to_dot()
         print('}')
     else:

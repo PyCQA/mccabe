@@ -1,17 +1,19 @@
 language: python
 sudo: false
-python:
-  - "2.6"
-  - "2.7"
-  - "3.2"
-  - "3.3"
-  - "3.4"
-  - "pypy"
-install:
-  - pip install -e .
-  - pip list
+before_script:
+  - pip install tox
 script:
-  - python setup.py test
+  - tox
 matrix:
+  fast_finish: true
   allow_failures:
-    - python: pypy
+    - env: TOXENV=docstrings
+env:
+  - TOXENV=py26
+  - TOXENV=py27
+  - TOXENV=py32
+  - TOXENV=py33
+  - TOXENV=py34
+  - TOXENV=pypy
+  - TOXENV=flake8
+  - TOXENV=docstrings
