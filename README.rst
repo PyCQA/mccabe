@@ -65,6 +65,14 @@ Links
 Changes
 -------
 
+0.3.1 - 2015-06-14
+``````````````````
+
+* Include ``test_mccabe.py`` in releases.
+
+* Always coerce the ``max_complexity`` value from Flake8's entry-point to an
+  integer.
+
 0.3 - 2014-12-17
 ````````````````
 
