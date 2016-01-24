@@ -97,10 +97,6 @@ async def foobar(a, b, c):
 
     async for x in a:
         pass
-
-
-def foo():
-    yield from [1, 2, 3]
 """
 
 
@@ -187,7 +183,8 @@ class McCabeTestCase(unittest.TestCase):
                         reason="Async keywords are only valid on Python 3.5+")
     def test_async_keywords(self):
         """Validate that we properly process async keyword usage."""
-        self.assert_complexity(async_keywords, 5)
+        complexity = get_complexity_number(async_keywords, self.strio)
+        self.assertEqual(complexity, 3)
 
 
 class RegressionTests(unittest.TestCase):
