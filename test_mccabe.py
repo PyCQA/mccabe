@@ -5,6 +5,8 @@ try:
 except ImportError:
     from io import StringIO
 
+import pytest
+
 import mccabe
 from mccabe import get_code_complexity
 
@@ -82,6 +84,23 @@ except TypeB:
     print(3)
 else:
     print(4)
+"""
+
+async_keywords = """\
+async def foobar(a, b, c):
+    await whatever(a, b, c)
+    if await b:
+        pass
+
+    async with c:
+        pass
+
+    async for x in a:
+        pass
+
+
+def foo():
+    yield from [1, 2, 3]
 """
 
 
@@ -163,6 +182,12 @@ class McCabeTestCase(unittest.TestCase):
 
     def test_try_else(self):
         self.assert_complexity(try_else, 4)
+
+    @pytest.mark.skipif(sys.version_info < (3, 5),
+                        reason="Async keywords are only valid on Python 3.5+")
+    def test_async_keywords(self):
+        """Validate that we properly process async keyword usage."""
+        self.assert_complexity(async_keywords, 5)
 
 
 class RegressionTests(unittest.TestCase):
