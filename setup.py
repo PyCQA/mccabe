@@ -33,7 +33,8 @@ setup(
     license='Expat license',
     py_modules=['mccabe'],
     zip_safe=False,
-    test_suite='test_mccabe',
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
     entry_points={
         'flake8.extension': [
             'C90 = mccabe:McCabeChecker',
