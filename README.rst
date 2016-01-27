@@ -65,6 +65,13 @@ Links
 Changes
 -------
 
+0.4.0 - 2016-01-27
+``````````````````
+
+* Stop testing on Python 3.2
+
+* Add support for async/await keywords on Python 3.5 from PEP 0492
+
 0.3.1 - 2015-06-14
 ``````````````````
 
