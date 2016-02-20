@@ -235,8 +235,8 @@ class McCabeChecker(object):
     @classmethod
     def add_options(cls, parser):
         parser.add_option('--max-complexity', default=-1, action='store',
-                          type='int', help="McCabe complexity threshold")
-        parser.config_options.append('max-complexity')
+                          type='int', help="McCabe complexity threshold",
+                          parse_from_config=True)
 
     @classmethod
     def parse_options(cls, options):
