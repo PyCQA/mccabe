@@ -234,9 +234,22 @@ class McCabeChecker(object):
 
     @classmethod
     def add_options(cls, parser):
-        parser.add_option('--max-complexity', default=-1, action='store',
-                          type='int', help="McCabe complexity threshold",
-                          parse_from_config=True)
+        flag = '--max-complexity'
+        kwargs = {
+            'defaults': -1,
+            'action': 'store',
+            'type': 'int',
+            'help': 'McCabe complexity threshold',
+            'parse_from_config': 'True',
+        }
+        config_opts = getattr(parser, 'config_options', None)
+        if isinstance(config_opts, list):
+            # Flake8 2.x
+            kwargs.pop('parse_from_config')
+            parser.add_option(flag, **kwargs)
+            parser.config_options.append('max-complexity')
+        else:
+            parser.add_option(flag, **kwargs)
 
     @classmethod
     def parse_options(cls, options):
