@@ -14,7 +14,7 @@ try:
 except ImportError:   # Python 2.5
     from flake8.util import ast, iter_child_nodes
 
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 
 class ASTVisitor(object):
@@ -236,7 +236,7 @@ class McCabeChecker(object):
     def add_options(cls, parser):
         flag = '--max-complexity'
         kwargs = {
-            'defaults': -1,
+            'default': -1,
             'action': 'store',
             'type': 'int',
             'help': 'McCabe complexity threshold',
