@@ -7,6 +7,8 @@ from __future__ import with_statement
 
 import optparse
 import sys
+import tokenize
+
 from collections import defaultdict
 try:
     import ast
@@ -292,6 +294,23 @@ def get_module_complexity(module_path, threshold=7):
     return get_code_complexity(code, threshold, filename=module_path)
 
 
+def _read(filename):
+    if (2, 5) < sys.version_info < (3, 0):
+        with open(filename, 'rU') as f:
+            return f.read()
+    elif (3, 0) <= sys.version_info < (4, 0):
+        """Read the source code."""
+        try:
+            with open(filename, 'rb') as f:
+                (encoding, _) = tokenize.detect_encoding(f.readline)
+        except (LookupError, SyntaxError, UnicodeError):
+            # Fall back if file encoding is improperly declared
+            with open(filename, encoding='latin-1') as f:
+                return f.read()
+        with open(filename, 'r', encoding=encoding):
+            return f.read()
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
@@ -304,8 +323,7 @@ def main(argv=None):
 
     options, args = opar.parse_args(argv)
 
-    with open(args[0], "rU") as mod:
-        code = mod.read()
+    code = _read(args[0])
     tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
     visitor = PathGraphingAstVisitor()
     visitor.preorder(tree, visitor)
