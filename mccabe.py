@@ -16,7 +16,7 @@ try:
 except ImportError:   # Python 2.5
     from flake8.util import ast, iter_child_nodes
 
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 
 
 class ASTVisitor(object):
@@ -229,7 +229,7 @@ class McCabeChecker(object):
     version = __version__
     _code = 'C901'
     _error_tmpl = "C901 %r is too complex (%d)"
-    max_complexity = 0
+    max_complexity = -1
 
     def __init__(self, tree, filename):
         self.tree = tree
