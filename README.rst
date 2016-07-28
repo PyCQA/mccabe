@@ -65,6 +65,11 @@ Links
 Changes
 -------
 
+0.5.1 - 2016-07-28
+``````````````````
+
+* Set default maximum complexity to -1 on the class itself
+
 0.5.0 - 2016-05-30
 ``````````````````
 
