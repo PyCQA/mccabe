@@ -307,7 +307,7 @@ def _read(filename):
             # Fall back if file encoding is improperly declared
             with open(filename, encoding='latin-1') as f:
                 return f.read()
-        with open(filename, 'r', encoding=encoding):
+        with open(filename, 'r', encoding=encoding) as f:
             return f.read()
 
 
