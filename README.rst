@@ -65,6 +65,11 @@ Links
 Changes
 -------
 
+0.5.2 - 2016-07-31
+``````````````````
+
+* When opening files ourselves, make sure we always name the file variable
+
 0.5.1 - 2016-07-28
 ``````````````````
 
