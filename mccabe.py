@@ -61,10 +61,11 @@ class PathNode(object):
 
 
 class PathGraph(object):
-    def __init__(self, name, entity, lineno):
+    def __init__(self, name, entity, lineno, column=0):
         self.name = name
         self.entity = entity
         self.lineno = lineno
+        self.column = column
         self.nodes = defaultdict(list)
 
     def connect(self, n1, n2):
@@ -116,7 +117,7 @@ class PathGraphingAstVisitor(ASTVisitor):
         else:
             entity = node.name
 
-        name = '%d:1: %r' % (node.lineno, entity)
+        name = '%d:%d: %r' % (node.lineno, node.col_offset, entity)
 
         if self.graph is not None:
             # closure
@@ -128,7 +129,7 @@ class PathGraphingAstVisitor(ASTVisitor):
             self.graph.connect(pathnode, bottom)
             self.tail = bottom
         else:
-            self.graph = PathGraph(name, entity, node.lineno)
+            self.graph = PathGraph(name, entity, node.lineno, node.col_offset)
             pathnode = PathNode(name)
             self.tail = pathnode
             self.dispatch_list(node.body)
@@ -178,7 +179,7 @@ class PathGraphingAstVisitor(ASTVisitor):
         """create the subgraphs representing any `if` and `for` statements"""
         if self.graph is None:
             # global loop
-            self.graph = PathGraph(name, name, node.lineno)
+            self.graph = PathGraph(name, name, node.lineno, node.col_offset)
             pathnode = PathNode(name)
             self._subgraph_parse(node, pathnode, extra_blocks)
             self.graphs["%s%s" % (self.classname, name)] = self.graph
@@ -265,7 +266,7 @@ class McCabeChecker(object):
         for graph in visitor.graphs.values():
             if graph.complexity() > self.max_complexity:
                 text = self._error_tmpl % (graph.entity, graph.complexity())
-                yield graph.lineno, 0, text, type(self)
+                yield graph.lineno, graph.column, text, type(self)
 
 
 def get_code_complexity(code, threshold=7, filename='stdin'):
