@@ -65,6 +65,11 @@ Links
 Changes
 -------
 
+0.5.3 - 2016-12-14
+``````````````````
+
+* Report actual column number of violation instead of the start of the line
+
 0.5.2 - 2016-07-31
 ``````````````````
 
