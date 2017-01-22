@@ -105,6 +105,11 @@ async def foobar(a, b, c):
         pass
 """
 
+annotated_assign = """\
+def f():
+    x: Any = None
+"""
+
 
 def get_complexity_number(snippet, strio, max=0):
     """Get the complexity number from the printed string."""
@@ -195,6 +200,14 @@ class McCabeTestCase(unittest.TestCase):
         """Validate that we properly process async keyword usage."""
         complexity = get_complexity_number(async_keywords, self.strio)
         self.assertEqual(complexity, 3)
+
+    @pytest.mark.skipif(
+        sys.version_info < (3, 6),
+        reason="Annotated assignments are only valid on Python 3.6+",
+    )
+    def test_annotated_assignment(self):
+        complexity = get_complexity_number(annotated_assign, self.strio)
+        self.assertEqual(complexity, 1)
 
 
 class RegressionTests(unittest.TestCase):
