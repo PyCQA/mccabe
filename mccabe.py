@@ -160,10 +160,11 @@ class PathGraphingAstVisitor(ASTVisitor):
         name = "Stmt %d" % lineno
         self.appendPathNode(name)
 
-    visitAssert = visitAssign = visitAugAssign = visitDelete = visitPrint = \
-        visitRaise = visitYield = visitImport = visitCall = visitSubscript = \
-        visitPass = visitContinue = visitBreak = visitGlobal = visitReturn = \
-        visitAwait = visitSimpleStatement
+    def default(self, node):
+        if isinstance(node, ast.stmt):
+            self.visitSimpleStatement(node)
+        else:
+            super(PathGraphingAstVisitor, self).default(node)
 
     def visitLoop(self, node):
         name = "Loop %d" % node.lineno
