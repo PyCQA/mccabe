@@ -16,6 +16,12 @@ from mccabe import get_code_complexity
 trivial = 'def f(): pass'
 
 
+expr_as_statement = '''\
+def f():
+    """docstring"""
+'''
+
+
 sequential = """\
 def f(n):
     k = n + 4
@@ -175,6 +181,10 @@ class McCabeTestCase(unittest.TestCase):
         self.assertEqual(complexity, None)
         printed_message = self.strio.getvalue()
         self.assertEqual(printed_message, "")
+
+    def test_expr_as_statement(self):
+        complexity = get_complexity_number(expr_as_statement, self.strio)
+        self.assertEqual(complexity, 1)
 
     def test_try_else(self):
         self.assert_complexity(try_else, 4)
