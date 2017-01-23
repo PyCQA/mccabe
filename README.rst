@@ -65,6 +65,13 @@ Links
 Changes
 -------
 
+0.6.0 - 2017-01-23
+``````````````````
+
+* Add support for Python 3.6
+
+* Fix handling for missing statement types
+
 0.5.3 - 2016-12-14
 ``````````````````
 
