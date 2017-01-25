@@ -160,11 +160,11 @@ class PathGraphingAstVisitor(ASTVisitor):
         name = "Stmt %d" % lineno
         self.appendPathNode(name)
 
-    def default(self, node):
+    def default(self, node, *args):
         if isinstance(node, ast.stmt):
             self.visitSimpleStatement(node)
         else:
-            super(PathGraphingAstVisitor, self).default(node)
+            super(PathGraphingAstVisitor, self).default(node, *args)
 
     def visitLoop(self, node):
         name = "Loop %d" % node.lineno
