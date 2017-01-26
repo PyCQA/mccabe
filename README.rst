@@ -65,6 +65,12 @@ Links
 Changes
 -------
 
+0.6.1 - 2017-01-26
+``````````````````
+
+* Fix signature for ``PathGraphingAstVisitor.default`` to match the signature
+  for ``ASTVisitor``
+
 0.6.0 - 2017-01-23
 ``````````````````
 
