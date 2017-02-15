@@ -9,7 +9,7 @@ This module provides a plugin for ``flake8``, the Python code checker.
 Installation
 ------------
 
-You can install, upgrade, uninstall ``mccabe`` with these commands::
+You can install, upgrade, or uninstall ``mccabe`` with these commands::
 
   $ pip install mccabe
   $ pip install --upgrade mccabe
@@ -33,7 +33,7 @@ The complexity checker can be used directly::
 Plugin for Flake8
 -----------------
 
-When both ``flake8 2.0`` and ``mccabe`` are installed, the plugin is
+When both ``flake8 2+`` and ``mccabe`` are installed, the plugin is
 available in ``flake8``::
 
   $ flake8 --version
@@ -41,13 +41,13 @@ available in ``flake8``::
 
 By default the plugin is disabled.  Use the ``--max-complexity`` switch to
 enable it.  It will emit a warning if the McCabe complexity of a function is
-higher that the value::
+higher than the provided value::
 
     $ flake8 --max-complexity 10 coolproject
     ...
     coolproject/mod.py:1204:1: C901 'CoolFactory.prepare' is too complex (14)
 
-This feature is quite useful to detect over-complex code.  According to McCabe,
+This feature is quite useful for detecting over-complex code.  According to McCabe,
 anything that goes beyond 10 is too complex.
 
 
@@ -56,10 +56,12 @@ Links
 
 * Feedback and ideas: http://mail.python.org/mailman/listinfo/code-quality
 
-* Cyclomatic complexity: http://en.wikipedia.org/wiki/Cyclomatic_complexity.
+* Cyclomatic complexity: http://en.wikipedia.org/wiki/Cyclomatic_complexity
 
 * Ned Batchelder's script:
   http://nedbatchelder.com/blog/200803/python_code_complexity_microtool.html
+
+* McCabe complexity: http://en.wikipedia.org/wiki/Cyclomatic_complexity
 
 
 Changes
