@@ -1,6 +1,9 @@
 McCabe complexity checker
 =========================
 
+.. image:: https://travis-ci.org/flintwork/mccabe.svg?branch=master   
+   :target: https://travis-ci.org/flintwork/mccabe
+
 Ned's script to check McCabe complexity.
 
 This module provides a plugin for ``flake8``, the Python code checker.
