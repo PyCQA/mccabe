@@ -50,8 +50,12 @@ higher than the provided value::
 This feature is quite useful for detecting over-complex code.  According to McCabe,
 anything that goes beyond 10 is too complex.
 
-**Note:** You can silence mccabe complexity errors on individual funtions with 
-flake8 by appending ``  # noqa: C901`` to the function definition line.
+Flake8 has many features that mccabe does not provide. Flake8 allows users to
+ignore violations reported by plugins with ``# noqa``. Read more about this in
+`their documentation
+<http://flake8.pycqa.org/en/latest/user/violations.html#in-line-ignoring-errors>`__.
+To silence violations reported by ``mccabe``, place your ``# noqa`` on the
+function definition line.
 
 
 Links
