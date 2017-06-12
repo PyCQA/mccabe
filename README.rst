@@ -50,6 +50,9 @@ higher than the provided value::
 This feature is quite useful for detecting over-complex code.  According to McCabe,
 anything that goes beyond 10 is too complex.
 
+**Note:** You can silence mccabe complexity errors on individual funtions with 
+flake8 by appending ``  # noqa: C901`` to the function definition line.
+
 
 Links
 -----
