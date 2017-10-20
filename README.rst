@@ -54,8 +54,9 @@ Flake8 has many features that mccabe does not provide. Flake8 allows users to
 ignore violations reported by plugins with ``# noqa``. Read more about this in
 `their documentation
 <http://flake8.pycqa.org/en/latest/user/violations.html#in-line-ignoring-errors>`__.
-To silence violations reported by ``mccabe``, place your ``# noqa`` on the
-function definition line.
+To silence violations reported by ``mccabe``, place your ``# noqa: C901`` on
+the function definition line, where the error is reported for (possibly a
+decorator).
 
 
 Links
