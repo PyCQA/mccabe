@@ -16,7 +16,7 @@ try:
 except ImportError:   # Python 2.5
     from flake8.util import ast, iter_child_nodes
 
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 
 
 class ASTVisitor(object):
@@ -319,9 +319,12 @@ def main(argv=None):
     opar = optparse.OptionParser()
     opar.add_option("-d", "--dot", dest="dot",
                     help="output a graphviz dot file", action="store_true")
-    opar.add_option("-m", "--min", dest="threshold",
+    opar.add_option("-m", "--min", dest="min_threshold",
                     help="minimum complexity for output", type="int",
                     default=1)
+    opar.add_option("--max", dest="max_threshold",
+                    help="maximum complexity. Above this threshold, the result will be a failure", type="int",
+                    default=5)
 
     options, args = opar.parse_args(argv)
 
@@ -329,19 +332,26 @@ def main(argv=None):
     tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
     visitor = PathGraphingAstVisitor()
     visitor.preorder(tree, visitor)
-
+    ret = 0
     if options.dot:
         print('graph {')
         for graph in visitor.graphs.values():
-            if (not options.threshold or
-                    graph.complexity() >= options.threshold):
+            complexity = graph.complexity()
+            if (not options.min_threshold or
+                    complexity >= options.min_threshold):
                 graph.to_dot()
+            if complexity > options.max_threshold:
+                ret = 1
         print('}')
     else:
         for graph in visitor.graphs.values():
-            if graph.complexity() >= options.threshold:
+            complexity = graph.complexity()
+            if complexity >= options.min_threshold:
                 print(graph.name, graph.complexity())
+            if complexity > options.max_threshold:
+                ret = 1
+    return ret
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    sys.exit(main(sys.argv[1:]))
