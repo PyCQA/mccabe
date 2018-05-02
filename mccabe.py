@@ -323,7 +323,8 @@ def main(argv=None):
                     help="minimum complexity for output", type="int",
                     default=1)
     opar.add_option("--max", dest="max_threshold",
-                    help="maximum complexity. Above this threshold, the result will be a failure", type="int",
+                    help="maximum complexity. Above this threshold, "
+                         "the result will be a failure", type="int",
                     default=5)
 
     options, args = opar.parse_args(argv)
