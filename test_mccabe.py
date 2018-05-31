@@ -18,7 +18,7 @@ trivial = 'def f(): pass'
 
 expr_as_statement = '''\
 def f():
-    """docstring"""
+    0xF00D
 '''
 
 
