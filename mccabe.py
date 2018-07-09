@@ -336,7 +336,10 @@ def main(argv=None):
 
     to_analyze = []
     if options.is_project:
-        for dirpath, _, filenames in os.walk(argv[1]):
+        directory = argv[1]
+        if not argv[1].startswith('/'):
+            directory = '{}/{}'.format(os.getcwd(), argv[1])
+        for dirpath, _, filenames in os.walk(directory):
             for filename in filenames:
                 if filename.endswith('.py'):
                     to_analyze.append(process_file('{}/{}'.format(dirpath, filename)))
