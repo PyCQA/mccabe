@@ -30,6 +30,20 @@ The complexity checker can be used directly::
   ("257:1: 'get_code_complexity'", 5)
 
 
+Analyze Project
+---------------
+
+You can analyze an entire codebase with the `-p` or `--project` and specifying a directory::
+
+  $ python -m mccabe --min 5 -p project_name
+  ("185:1: 'PathGraphingAstVisitor.visitIf'", 5)
+  ("71:1: 'PathGraph.to_dot'", 5)
+  ("245:1: 'McCabeChecker.run'", 5)
+  ("283:1: 'main'", 7)
+  ("203:1: 'PathGraphingAstVisitor.visitTryExcept'", 5)
+  ("257:1: 'get_code_complexity'", 5)
+
+
 Plugin for Flake8
 -----------------
 

@@ -5,6 +5,8 @@
 """
 from __future__ import with_statement
 
+import os
+
 import optparse
 import sys
 import tokenize
@@ -16,7 +18,7 @@ try:
 except ImportError:   # Python 2.5
     from flake8.util import ast, iter_child_nodes
 
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 
 
 class ASTVisitor(object):
@@ -55,6 +57,10 @@ class PathNode(object):
     def to_dot(self):
         print('node [shape=%s,label="%s"] %d;' % (
             self.look, self.name, self.dot_id()))
+
+    def to_dot_string(self):
+        return 'node [shape=%s,label="%s"] %d;' % (
+            self.look, self.name, self.dot_id())
 
     def dot_id(self):
         return id(self)
@@ -319,17 +325,46 @@ def main(argv=None):
     opar = optparse.OptionParser()
     opar.add_option("-d", "--dot", dest="dot",
                     help="output a graphviz dot file", action="store_true")
+    opar.add_option("-p", "--project", dest="is_project",
+                    help="Run script across project",
+                    default=False)
     opar.add_option("-m", "--min", dest="threshold",
                     help="minimum complexity for output", type="int",
                     default=1)
 
     options, args = opar.parse_args(argv)
 
-    code = _read(args[0])
-    tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
+    to_analyze = []
+    if options.is_project:
+        for dirpath, _, filenames in os.walk(argv[1]):
+            for filename in filenames:
+                if filename.endswith('.py'):
+                    to_analyze.append(process_file('{}/{}'.format(dirpath, filename)))
+
+        for visitor in to_analyze:
+            print_graph(visitor, options)
+    else:
+        visitor = process_file(args[0])
+        print_graph(visitor, options)
+
+
+def process_file(file):
+    """Visit a file for processing"""
+    code = _read(file)
+    tree = compile(code, file, "exec", ast.PyCF_ONLY_AST)
     visitor = PathGraphingAstVisitor()
     visitor.preorder(tree, visitor)
+    return visitor
 
+
+def print_graph(visitor, options):
+    """
+    If the dot argument is specified then print the
+    graph
+    :param visitor:
+    :param options:
+    :return:
+    """
     if options.dot:
         print('graph {')
         for graph in visitor.graphs.values():
@@ -344,4 +379,9 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
+    try:
+        arg1 = sys.argv[1]
+    except IndexError:
+        print("Usage: mccabe <location_of_script>")
+        sys.exit(1)
     main(sys.argv[1:])
