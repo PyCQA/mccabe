@@ -6,6 +6,8 @@
 from __future__ import with_statement
 
 import optparse
+import os
+import os.path
 import sys
 import tokenize
 
@@ -322,25 +324,52 @@ def main(argv=None):
     opar.add_option("-m", "--min", dest="threshold",
                     help="minimum complexity for output", type="int",
                     default=1)
+    opar.add_option("-c", "--check", dest="fail_if_complex",
+                    help="fail if any node exceeds complexity limit",
+                    action="store_true")
 
     options, args = opar.parse_args(argv)
-
-    code = _read(args[0])
-    tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
-    visitor = PathGraphingAstVisitor()
-    visitor.preorder(tree, visitor)
-
     if options.dot:
-        print('graph {')
-        for graph in visitor.graphs.values():
-            if (not options.threshold or
-                    graph.complexity() >= options.threshold):
-                graph.to_dot()
-        print('}')
-    else:
-        for graph in visitor.graphs.values():
-            if graph.complexity() >= options.threshold:
-                print(graph.name, graph.complexity())
+        if len(argv) > 1:
+            sys.exit("error: for graphviz output specify only one file")
+        if not os.path.isfile(argv[0]):
+            sys.exit("error: for graphviz output specify a file")
+
+    max_complexity = [0]
+    def check_file(filename):
+        code = _read(filename)
+        tree = compile(code, filename, "exec", ast.PyCF_ONLY_AST)
+        visitor = PathGraphingAstVisitor()
+        visitor.preorder(tree, visitor)
+
+        if options.dot:
+            print('graph {')
+            for graph in visitor.graphs.values():
+                if (not options.threshold or
+                        graph.complexity() >= options.threshold):
+                    graph.to_dot()
+            print('}')
+        else:
+            for graph in visitor.graphs.values():
+                complexity = graph.complexity()
+                max_complexity[0] = max(max_complexity[0], complexity)
+                if graph.complexity() >= options.threshold:
+                    print("{}:{} has complexity {}".format(
+                        filename, graph.name, complexity))
+
+    def recurse(file_or_dir):
+        if os.path.isfile(file_or_dir):
+            if file_or_dir.endswith(".py"):
+                check_file(file_or_dir)
+        else:
+            for filename in os.listdir(file_or_dir):
+                recurse(os.path.join(file_or_dir, filename))
+
+    for file_or_dir in args:
+        recurse(file_or_dir)
+
+    if options.fail_if_complex and max_complexity[0] >= options.threshold:
+        sys.exit(1)
 
 
 if __name__ == '__main__':
