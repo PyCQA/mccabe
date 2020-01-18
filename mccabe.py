@@ -3,18 +3,13 @@
     http://nedbatchelder.com/blog/200803/python_code_complexity_microtool.html
     MIT License.
 """
-from __future__ import with_statement
-
 import optparse
 import sys
 import tokenize
 
 from collections import defaultdict
-try:
-    import ast
-    from ast import iter_child_nodes
-except ImportError:   # Python 2.5
-    from flake8.util import ast, iter_child_nodes
+import ast
+from ast import iter_child_nodes
 
 __version__ = '0.6.1'
 
