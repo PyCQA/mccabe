@@ -291,8 +291,7 @@ def get_code_complexity(code, threshold=7, filename='stdin'):
 
 def get_module_complexity(module_path, threshold=7):
     """Returns the complexity of a module"""
-    with open(module_path, "rU") as mod:
-        code = mod.read()
+    code = _read(module_path)
     return get_code_complexity(code, threshold, filename=module_path)
 
 

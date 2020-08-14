@@ -229,6 +229,9 @@ class RegressionTests(unittest.TestCase):
         mccabe.McCabeChecker.parse_options(options)
         self.assertEqual(16, mccabe.McCabeChecker.max_complexity)
 
+    def test_get_module_complexity(self):
+        self.assertEqual(0, mccabe.get_module_complexity("mccabe.py"))
+
 
 if __name__ == "__main__":
     unittest.main()
