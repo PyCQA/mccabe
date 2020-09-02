@@ -1,11 +1,14 @@
 import unittest
 import sys
+
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
 
 import pytest
+import hypothesmith
+from hypothesis import HealthCheck, given, settings, strategies as st
 
 import mccabe
 from mccabe import get_code_complexity
@@ -233,5 +236,40 @@ class RegressionTests(unittest.TestCase):
         self.assertEqual(0, mccabe.get_module_complexity("mccabe.py"))
 
 
+# This test uses the Hypothesis and Hypothesmith libraries to generate random
+# syntatically-valid Python source code and applies McCabe on it.
+@settings(
+    max_examples=1000,  # roughly 1k tests/minute, or half that under coverage
+    derandomize=False,  # deterministic mode to avoid CI flakiness
+    deadline=None,  # ignore Hypothesis' health checks; we already know that
+    suppress_health_check=HealthCheck.all(),  # this is slow and filter-heavy.
+)
+@given(
+    # Note that while Hypothesmith might generate code unlike that written by
+    # humans, it's a general test that should pass for any *valid* source code.
+    # (so e.g. running it against code scraped of the internet might also help)
+    src_contents=hypothesmith.from_grammar() | hypothesmith.from_node(),
+    max_complexity=st.integers(min_value=1),
+)
+def test_idempotent_any_syntatically_valid_python(
+    src_contents: str, max_complexity: int
+) -> None:
+    """Property-based tests for mccabe.
+
+    This test case is based on a similar test for Black, the code formatter.
+    Black's test was written by Zac Hatfield-Dodds, the author of Hypothesis
+    and the Hypothesmith tool for source code generation.  You can run this
+    file with `python`, `pytest`, or (soon) a coverage-guided fuzzer Zac is
+    working on.
+    """
+
+    # Before starting, let's confirm that the input string is valid Python:
+    compile(src_contents, "<string>", "exec")  # else bug is in hypothesmith
+
+    # Then try to apply get_complexity_number to the code...
+    get_code_complexity(src_contents, max_complexity)
+
+
 if __name__ == "__main__":
+    test_idempotent_any_syntatically_valid_python()
     unittest.main()
