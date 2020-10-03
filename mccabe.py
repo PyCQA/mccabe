@@ -242,7 +242,7 @@ class McCabeChecker(object):
         kwargs = {
             'default': -1,
             'action': 'store',
-            'type': 'int',
+            'type': int,
             'help': 'McCabe complexity threshold',
             'parse_from_config': 'True',
         }
