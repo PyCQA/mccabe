@@ -34,6 +34,7 @@ setup(
     py_modules=['mccabe'],
     zip_safe=False,
     entry_points={
+        'console_scripts': ['mccabe = mccabe:main'],
         'flake8.extension': [
             'C90 = mccabe:McCabeChecker',
         ],
