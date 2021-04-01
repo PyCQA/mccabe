@@ -7,8 +7,11 @@ except ImportError:
     from io import StringIO
 
 import pytest
-import hypothesmith
-from hypothesis import HealthCheck, given, settings, strategies as st
+try:
+    import hypothesmith
+    from hypothesis import HealthCheck, given, settings, strategies as st
+except ImportError:
+    hypothesmith = None
 
 import mccabe
 from mccabe import get_code_complexity
@@ -251,6 +254,7 @@ class RegressionTests(unittest.TestCase):
     src_contents=hypothesmith.from_grammar() | hypothesmith.from_node(),
     max_complexity=st.integers(min_value=1),
 )
+@pytest.mark.skipif(not hypothesmith, reason="hypothesmith could not be imported")
 def test_idempotent_any_syntatically_valid_python(
     src_contents: str, max_complexity: int
 ) -> None:
