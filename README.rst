@@ -75,6 +75,15 @@ Links
 Changes
 -------
 
+0.7.0 - 2021-01-23
+``````````````````
+
+* Drop support for all versions of Python lower than 3.6
+
+* Add support for Python 3.8, 3.9, and 3.10
+
+* Fix option declaration for Flake8
+
 0.6.1 - 2017-01-26
 ``````````````````
 

@@ -1,6 +1,8 @@
 *.egg
+*.eggs
 *.egg-info
 *.py[cod]
 .hypothesis/
 .tox
 dist
+build
