@@ -324,22 +324,27 @@ def main(argv=None):
 
     options, args = opar.parse_args(argv)
 
-    code = _read(args[0])
-    tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
-    visitor = PathGraphingAstVisitor()
-    visitor.preorder(tree, visitor)
+    if not args:
+        raise ValueError("No arguments to check files complexity")
 
-    if options.dot:
-        print('graph {')
-        for graph in visitor.graphs.values():
-            if (not options.threshold or
-                    graph.complexity() >= options.threshold):
-                graph.to_dot()
-        print('}')
-    else:
-        for graph in visitor.graphs.values():
-            if graph.complexity() >= options.threshold:
-                print(graph.name, graph.complexity())
+    for file in args:
+        print(f"------------------ | {file} | ------------------")
+        code = _read(file)
+        tree = compile(code, file, "exec", ast.PyCF_ONLY_AST)
+        visitor = PathGraphingAstVisitor()
+        visitor.preorder(tree, visitor)
+
+        if options.dot:
+            print('graph {')
+            for graph in visitor.graphs.values():
+                if (not options.threshold or
+                        graph.complexity() >= options.threshold):
+                    graph.to_dot()
+            print('}')
+        else:
+            for graph in visitor.graphs.values():
+                if graph.complexity() >= options.threshold:
+                    print(graph.name, graph.complexity())
 
 
 if __name__ == '__main__':
