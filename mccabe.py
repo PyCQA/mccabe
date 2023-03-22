@@ -323,6 +323,9 @@ def main(argv=None):
                     default=1)
 
     options, args = opar.parse_args(argv)
+    if not args:
+        opar.print_help()
+        opar.exit()
 
     code = _read(args[0])
     tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
