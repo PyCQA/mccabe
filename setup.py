@@ -37,6 +37,7 @@ setup(
         "flake8.extension": [
             "C90 = mccabe:McCabeChecker",
         ],
+        'console_scripts': ['mccabe=mccabe:main'],
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
