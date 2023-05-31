@@ -29,6 +29,14 @@ The complexity checker can be used directly::
   ("203:1: 'PathGraphingAstVisitor.visitTryExcept'", 5)
   ("257:1: 'get_code_complexity'", 5)
 
+If your Python environment is added to $PATH, it can also be used as a console script entry point::
+
+  $ mccabe --min 5 mccabe
+  192:4: 'PathGraphingAstVisitor._subgraph_parse' 5
+  273:0: 'get_code_complexity' 5
+  298:0: '_read' 5
+  315:0: 'main' 8
+
 
 Plugin for Flake8
 -----------------
