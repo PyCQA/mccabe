@@ -31,7 +31,7 @@ The complexity checker can be used directly::
 
 If your Python environment is added to $PATH, it can also be used as a console script entry point::
 
-  $ mccabe --min 5 mccabe
+  $ mccabe --min 5 mccabe.py
   192:4: 'PathGraphingAstVisitor._subgraph_parse' 5
   273:0: 'get_code_complexity' 5
   298:0: '_read' 5
