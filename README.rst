@@ -75,7 +75,7 @@ Links
 Changes
 -------
 
-0.7.0 - 2021-01-23
+0.7.0 - 2022-01-23
 ``````````````````
 
 * Drop support for all versions of Python lower than 3.6
