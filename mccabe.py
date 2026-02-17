@@ -199,10 +199,23 @@ class PathGraphingAstVisitor(ASTVisitor):
             self.tail = pathnode
             self.dispatch_list(extra.body)
             loose_ends.append(self.tail)
-        if node.orelse:
-            self.tail = pathnode
-            self.dispatch_list(node.orelse)
-            loose_ends.append(self.tail)
+        # Handle elif chains iteratively to avoid RecursionError
+        while node.orelse:
+            if (len(node.orelse) == 1
+                    and isinstance(node.orelse[0], ast.If)):
+                # elif branch: process inline instead of recursing
+                node = node.orelse[0]
+                name = "If %d" % node.lineno
+                elif_node = self.appendPathNode(name)
+                self.tail = elif_node
+                self.dispatch_list(node.body)
+                loose_ends.append(self.tail)
+            else:
+                # else branch
+                self.tail = pathnode
+                self.dispatch_list(node.orelse)
+                loose_ends.append(self.tail)
+                break
         else:
             loose_ends.append(pathnode)
         if pathnode:
