@@ -241,37 +241,44 @@ class RegressionTests(unittest.TestCase):
 
 # This test uses the Hypothesis and Hypothesmith libraries to generate random
 # syntatically-valid Python source code and applies McCabe on it.
-@settings(
-    max_examples=1000,  # roughly 1k tests/minute, or half that under coverage
-    derandomize=False,  # deterministic mode to avoid CI flakiness
-    deadline=None,  # ignore Hypothesis' health checks; we already know that
-    suppress_health_check=HealthCheck.all(),  # this is slow and filter-heavy.
-)
-@given(
-    # Note that while Hypothesmith might generate code unlike that written by
-    # humans, it's a general test that should pass for any *valid* source code.
-    # (so e.g. running it against code scraped of the internet might also help)
-    src_contents=hypothesmith.from_grammar() | hypothesmith.from_node(),
-    max_complexity=st.integers(min_value=1),
-)
-@pytest.mark.skipif(not hypothesmith, reason="hypothesmith could not be imported")
-def test_idempotent_any_syntatically_valid_python(
-    src_contents: str, max_complexity: int
-) -> None:
-    """Property-based tests for mccabe.
+# The hypothesis/hypothesmith decorators below run at import time and call into
+# hypothesmith, so they can't merely be skipif'd -- the module would fail to
+# import without the optional deps.  Guard the whole definition instead.
+if hypothesmith is None:
+    @pytest.mark.skip(reason="hypothesmith could not be imported")
+    def test_idempotent_any_syntatically_valid_python():
+        """Property-based fuzz test; requires the optional hypothesmith dep."""
+else:
+    @settings(
+        max_examples=1000,  # roughly 1k tests/minute, or half under coverage
+        derandomize=False,  # deterministic mode to avoid CI flakiness
+        deadline=None,  # ignore Hypothesis' health checks; we already know that
+        suppress_health_check=HealthCheck.all(),  # this is slow and filter-heavy.
+    )
+    @given(
+        # Note that while Hypothesmith might generate code unlike that written by
+        # humans, it's a general test that should pass for any *valid* source
+        # code (so e.g. running it against code scraped off the internet helps).
+        src_contents=hypothesmith.from_grammar() | hypothesmith.from_node(),
+        max_complexity=st.integers(min_value=1),
+    )
+    def test_idempotent_any_syntatically_valid_python(
+        src_contents: str, max_complexity: int
+    ) -> None:
+        """Property-based tests for mccabe.
 
-    This test case is based on a similar test for Black, the code formatter.
-    Black's test was written by Zac Hatfield-Dodds, the author of Hypothesis
-    and the Hypothesmith tool for source code generation.  You can run this
-    file with `python`, `pytest`, or (soon) a coverage-guided fuzzer Zac is
-    working on.
-    """
+        This test case is based on a similar test for Black, the code formatter.
+        Black's test was written by Zac Hatfield-Dodds, the author of Hypothesis
+        and the Hypothesmith tool for source code generation.  You can run this
+        file with `python`, `pytest`, or (soon) a coverage-guided fuzzer Zac is
+        working on.
+        """
 
-    # Before starting, let's confirm that the input string is valid Python:
-    compile(src_contents, "<string>", "exec")  # else bug is in hypothesmith
+        # Before starting, confirm that the input string is valid Python:
+        compile(src_contents, "<string>", "exec")  # else bug is in hypothesmith
 
-    # Then try to apply get_complexity_number to the code...
-    get_code_complexity(src_contents, max_complexity)
+        # Then try to apply get_complexity_number to the code...
+        get_code_complexity(src_contents, max_complexity)
 
 
 if __name__ == "__main__":
