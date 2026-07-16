@@ -10,7 +10,10 @@ import pytest
 try:
     import hypothesmith
     from hypothesis import HealthCheck, given, settings, strategies as st
-except ImportError:
+except Exception:
+    # Optional dep: missing package (ImportError) or unusable on this
+    # interpreter (e.g. AttributeError: typing.ByteString removed in 3.14
+    # while an older hypothesmith/hypothesis is installed). See #113.
     hypothesmith = None
 
 import mccabe
