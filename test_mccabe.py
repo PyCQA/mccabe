@@ -98,6 +98,36 @@ else:
     print(4)
 """
 
+try_except_single = """\
+try:
+    print(1)
+except TypeA:
+    print(2)
+"""
+
+try_except_multiple = """\
+try:
+    print(1)
+except TypeA:
+    print(2)
+except TypeB:
+    print(3)
+except TypeC:
+    print(4)
+"""
+
+try_except_finally = """\
+try:
+    print(1)
+except TypeA:
+    print(2)
+finally:
+    if x:
+        print(3)
+    else:
+        print(4)
+"""
+
 async_keywords = """\
 async def foobar(a, b, c):
     await whatever(a, b, c)
@@ -198,7 +228,27 @@ class McCabeTestCase(unittest.TestCase):
         self.assertEqual(complexity, 1)
 
     def test_try_else(self):
-        self.assert_complexity(try_else, 4)
+        # The `except` handlers are parallel alternatives to the `try`
+        # body (+2), but the `else` clause runs sequentially after the
+        # `try` body succeeds, so it does not add its own decision point.
+        self.assert_complexity(try_else, 3)
+
+    def test_try_except_single_handler(self):
+        # A single `except` with no `else`/`finally` has exactly one
+        # genuine decision point: exception raised or not.
+        self.assert_complexity(try_except_single, 2)
+
+    def test_try_except_multiple_handlers(self):
+        # Each additional `except` handler is its own parallel
+        # alternative, and adds exactly 1 to the complexity.
+        self.assert_complexity(try_except_multiple, 4)
+
+    def test_try_except_finally(self):
+        # NOTE: statements inside `finally` are not currently traversed
+        # by the graph builder at all (a pre-existing, separate gap,
+        # unrelated to try/except/else handling), so the `if`/`else`
+        # inside `finally` here does not contribute to the complexity.
+        self.assert_complexity(try_except_finally, 2)
 
     @pytest.mark.skipif(sys.version_info < (3, 5),
                         reason="Async keywords are only valid on Python 3.5+")

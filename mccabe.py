@@ -213,9 +213,44 @@ class PathGraphingAstVisitor(ASTVisitor):
 
     def visitTryExcept(self, node):
         name = "TryExcept %d" % node.lineno
-        self._subgraph(node, name, extra_blocks=node.handlers)
+        if self.graph is None:
+            # global loop
+            self.graph = PathGraph(name, name, node.lineno, node.col_offset)
+            pathnode = PathNode(name)
+            self._subgraph_try_except_parse(node, pathnode)
+            self.graphs["%s%s" % (self.classname, name)] = self.graph
+            self.reset()
+        else:
+            pathnode = self.appendPathNode(name)
+            self._subgraph_try_except_parse(node, pathnode)
 
     visitTry = visitTryExcept
+
+    def _subgraph_try_except_parse(self, node, pathnode):
+        """parse the body, handlers and `else` block of a `try` statement
+
+        Unlike `if`/`for`, the except handlers are parallel alternatives to
+        the try body (exception vs. no exception), while an `else` clause
+        runs *sequentially* after the try body completes successfully --
+        it is not a third parallel branch, and (unlike `if`/`for` without
+        an `else`) the absence of an `else` clause does not introduce any
+        extra, unconditional edge to the bottom node.
+        """
+        loose_ends = []
+        self.tail = pathnode
+        self.dispatch_list(node.body)
+        if node.orelse:
+            self.dispatch_list(node.orelse)
+        loose_ends.append(self.tail)
+        for handler in node.handlers:
+            self.tail = pathnode
+            self.dispatch_list(handler.body)
+            loose_ends.append(self.tail)
+        if pathnode:
+            bottom = PathNode("", look='point')
+            for le in loose_ends:
+                self.graph.connect(le, bottom)
+            self.tail = bottom
 
     def visitWith(self, node):
         name = "With %d" % node.lineno
