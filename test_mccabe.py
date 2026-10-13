@@ -238,6 +238,18 @@ class RegressionTests(unittest.TestCase):
     def test_get_module_complexity(self):
         self.assertEqual(0, mccabe.get_module_complexity("mccabe.py"))
 
+    def test_long_elif_chain(self):
+        """Ensure bug #71 does not regress (RecursionError on long elif)."""
+        lines = ['def func(x):']
+        lines.append('    if x == 0:')
+        lines.append('        return 0')
+        for i in range(1, 200):
+            lines.append('    elif x == %d:' % i)
+            lines.append('        return %d' % i)
+        code = '\n'.join(lines) + '\n'
+        complexity = get_code_complexity(code, threshold=0)
+        self.assertEqual(complexity, 1)
+
 
 # This test uses the Hypothesis and Hypothesmith libraries to generate random
 # syntatically-valid Python source code and applies McCabe on it.
