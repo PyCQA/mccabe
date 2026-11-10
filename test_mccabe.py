@@ -281,6 +281,23 @@ else:
         get_code_complexity(src_contents, max_complexity)
 
 
+def test_main_reports_unparseable_file_cleanly(tmpdir, capsys):
+    """main() must not dump a traceback for a broken file.
+
+    get_code_complexity() already reports "Unable to parse ..." and moves
+    on; the CLI entry point should do the same instead of letting the
+    SyntaxError escape.
+    """
+    f = tmpdir.join('broken.py')
+    f.write('def f(:\n')
+    with pytest.raises(SystemExit) as exc:
+        mccabe.main([f.strpath])
+    assert exc.value.code == 1
+    _, err = capsys.readouterr()
+    assert 'Unable to parse' in err
+    assert 'broken.py' in err
+
+
 if __name__ == "__main__":
     test_idempotent_any_syntatically_valid_python()
     unittest.main()
