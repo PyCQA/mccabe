@@ -328,7 +328,12 @@ def main(argv=None):
         opar.exit()
 
     code = _read(args[0])
-    tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
+    try:
+        tree = compile(code, args[0], "exec", ast.PyCF_ONLY_AST)
+    except SyntaxError:
+        e = sys.exc_info()[1]
+        sys.stderr.write("Unable to parse %s: %s\n" % (args[0], e))
+        sys.exit(1)
     visitor = PathGraphingAstVisitor()
     visitor.preorder(tree, visitor)
 
