@@ -29,6 +29,10 @@ The complexity checker can be used directly::
   ("203:1: 'PathGraphingAstVisitor.visitTryExcept'", 5)
   ("257:1: 'get_code_complexity'", 5)
 
+The command exits with status 1 if it reports a function at or above the
+``--min`` threshold, and status 0 otherwise. Graph output with ``--dot``
+exits successfully regardless of the reported complexity.
+
 
 Plugin for Flake8
 -----------------

@@ -340,10 +340,14 @@ def main(argv=None):
                 graph.to_dot()
         print('}')
     else:
+        found = False
         for graph in visitor.graphs.values():
             if graph.complexity() >= options.threshold:
                 print(graph.name, graph.complexity())
+                found = True
+        return int(found)
+    return 0
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    sys.exit(main(sys.argv[1:]))
