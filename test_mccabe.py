@@ -1,5 +1,6 @@
 import unittest
 import sys
+import subprocess
 
 try:
     from StringIO import StringIO
@@ -15,6 +16,27 @@ except ImportError:
 
 import mccabe
 from mccabe import get_code_complexity
+
+
+@pytest.mark.parametrize('arguments, expected_status, expected_output', [
+    (['--min', '1'], 1, 'f'),
+    (['--min', '2'], 0, ''),
+    (['--dot', '--min', '1'], 0, 'graph {'),
+])
+def test_command_line_exit_status(tmp_path, arguments, expected_status,
+                                  expected_output):
+    source = tmp_path / 'source.py'
+    source.write_text('def f(): pass\n', encoding='utf-8')
+    result = subprocess.run(
+        [sys.executable, '-m', 'mccabe'] + arguments + [str(source)],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True,
+    )
+    assert result.returncode == expected_status
+    if expected_output:
+        assert expected_output in result.stdout
+    else:
+        assert not result.stdout
+    assert not result.stderr
 
 
 # Snippets are put outside of testcases because of spacing issue that would
